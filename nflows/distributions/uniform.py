@@ -28,6 +28,9 @@ class BoxUniform(distributions.Independent):
             distributions.Uniform(low=low, high=high), reinterpreted_batch_ndims
         )
 
+    def log_prob(self, data, context = None):
+        return super().log_prob(data)
+    
 
 class MG1Uniform(distributions.Uniform):
     def log_prob(self, value):
