@@ -61,3 +61,20 @@ class ReversePermutation(Permutation):
         if not check.is_positive_int(features):
             raise ValueError("Number of features must be a positive integer.")
         super().__init__(torch.arange(features - 1, -1, -1), dim)
+
+class RandomBlockPermutation(Permutation):
+    """Permutes using a random, but fixed, permutation. Only works with 1D inputs."""
+
+    def __init__(self, features, block_length = 2, dim=1):
+        if not check.is_positive_int(features):
+            raise ValueError('Number of features must be a positive integer.')
+        assert(features % block_length == 0)
+        perm_block = torch.randperm(features//block_length)
+        perm = []
+        for i in perm_block:
+            perm += [k for k in range(i*block_length, (i+1)*block_length)]
+        perm = torch.tensor(perm)
+        
+        super().__init__(perm, dim)
+        
+        

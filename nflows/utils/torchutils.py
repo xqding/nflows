@@ -85,6 +85,24 @@ def get_num_parameters(model):
         num_parameters += torch.numel(parameter)
     return num_parameters
 
+def create_alternating_block_binary_mask(features, even=True, block_length = 1):
+    """
+    Creates a binary mask of a given dimension which alternates its masking.
+
+    :param features: Dimension of mask.
+    :param even: If True, even values are assigned 1s, odd 0s. If False, vice versa.
+    :return: Alternating binary mask of type torch.Tensor.
+    """
+    mask = torch.zeros(features).byte()
+
+    if even:
+        for i in range(block_length):
+            mask[i::(2*block_length)] += 1
+    else:
+        for i in range(block_length, 2*block_length):
+            mask[i::(2*block_length)] += 1    
+    
+    return mask
 
 def create_alternating_binary_mask(features, even=True):
     """

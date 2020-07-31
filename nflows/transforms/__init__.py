@@ -1,3 +1,11 @@
+from nflows.transforms.autoregressive_circular import (
+    MaskedPiecewiseCircularRationalQuadraticAutoregressiveTransform,
+)
+
+from nflows.transforms.coupling_circular import (
+    PiecewiseCircularRationalQuadraticCouplingTransform
+)
+
 from nflows.transforms.autoregressive import (
     MaskedAffineAutoregressiveTransform,
     MaskedPiecewiseCubicAutoregressiveTransform,
@@ -42,6 +50,7 @@ from nflows.transforms.orthogonal import HouseholderSequence
 from nflows.transforms.permutations import (
     Permutation,
     RandomPermutation,
+    RandomBlockPermutation,
     ReversePermutation,
 )
 from nflows.transforms.qr import QRLinear

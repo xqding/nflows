@@ -1,6 +1,7 @@
 from nflows.utils.torchutils import (
     cbrt,
     create_alternating_binary_mask,
+    create_alternating_block_binary_mask,    
     create_mid_split_binary_mask,
     create_random_binary_mask,
     gaussian_kde_log_eval,
