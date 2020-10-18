@@ -75,8 +75,14 @@ def rational_quadratic_spline(
     min_derivative=DEFAULT_MIN_DERIVATIVE,
 ):
     if torch.min(inputs) < left or torch.max(inputs) > right:
-        raise InputOutsideDomain()
+        print("inputs out of domain")
+        #raise InputOutsideDomain()
+        # inputs = inputs - torch.fmod(inputs, right)
 
+    # if torch.min(inputs) < left or torch.max(inputs) > right:
+    #     print("inputs out of domain")
+    #     raise InputOutsideDomain()
+        
     num_bins = unnormalized_widths.shape[-1]
 
     if min_bin_width * num_bins > 1.0:
@@ -103,12 +109,17 @@ def rational_quadratic_spline(
     cumheights[..., 0] = bottom
     cumheights[..., -1] = top
     heights = cumheights[..., 1:] - cumheights[..., :-1]
-
+    
     if inverse:
         bin_idx = torchutils.searchsorted(cumheights, inputs)[..., None]
     else:
         bin_idx = torchutils.searchsorted(cumwidths, inputs)[..., None]
 
+    if torch.min(bin_idx) < 0 or torch.max(bin_idx) > num_bins - 1:
+        print(torch.min(bin_idx), torch.max(bin_idx))
+        bin_idx[bin_idx < 0] = 0
+        bin_idx[bin_idx > num_bins-1] = num_bins - 1
+        
     input_cumwidths = cumwidths.gather(-1, bin_idx)[..., 0]
     input_bin_widths = widths.gather(-1, bin_idx)[..., 0]
 

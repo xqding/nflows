@@ -6,4 +6,4 @@ from nflows.distributions.normal import (
     DiagonalNormal,
     StandardNormal,
 )
-from nflows.distributions.uniform import LotkaVolterraOscillating, MG1Uniform, BoxUniform
+from nflows.distributions.uniform import LotkaVolterraOscillating, MG1Uniform, BoxUniform, MultivariateUniform

@@ -2,7 +2,25 @@ from typing import Union
 
 import torch
 from torch import distributions
+from nflows.distributions.base import Distribution
+from nflows.utils import torchutils
 
+class MultivariateUniform(Distribution):
+    def __init__(self, low: torch.Tensor, high: torch.Tensor):
+        super().__init__()        
+        self.low = low
+        self.high = high
+        self.dist = distributions.Independent(
+            distributions.Uniform(self.low, self.high), 1)
+
+    def _sample(self, num_samples, context):
+        context_size = context.shape[0]
+        samples = self.dist.sample((context_size*num_samples,))
+        return torchutils.split_leading_dim(samples, [context_size, num_samples])
+    
+    def _log_prob(self, inputs, context):
+        return self.dist.log_prob(inputs)
+    
 
 class BoxUniform(distributions.Independent):
     def __init__(
@@ -34,10 +52,9 @@ class BoxUniform(distributions.Independent):
         super().__init__(
             distributions.Uniform(low=low, high=high), reinterpreted_batch_ndims
         )
-        
+
     def log_prob(self, data, context = None):
-        return super().log_prob(data)
-    
+        return super().log_prob(data)        
 
 class MG1Uniform(distributions.Uniform):
     def log_prob(self, value):
